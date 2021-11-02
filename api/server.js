@@ -12,6 +12,12 @@ server.use(cors());
 server.use(helmet());
 server.use(morgan("dev"));
 
+// require your posts router and connect it here
+const postsRouter = require("./posts/posts-router");
+
+server.use("/api/posts", postsRouter);
+
+// server status check
 const currentTime = new Date().toLocaleTimeString();
 
 server.get("/status", (req, res) => {
@@ -22,9 +28,5 @@ server.get("/status", (req, res) => {
     author: "Github: @cbarcinas",
   });
 });
-
-
-// require your posts router and connect it here
-
 
 module.exports = server;
