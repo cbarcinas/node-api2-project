@@ -23,6 +23,8 @@ server.get("/status", (req, res) => {
   });
 });
 
+
 // require your posts router and connect it here
+
 
 module.exports = server;
