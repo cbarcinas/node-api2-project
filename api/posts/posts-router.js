@@ -70,9 +70,29 @@ router.post("/", (req, res) => {
   }
 });
 
-// // Removes the post with the specified id and returns the deleted post object
-router.delete("/:id", (req, res) => {
-  
+// Removes the post with the specified id and returns the deleted post object
+router.delete("/:id", async (req, res) => {
+  try {
+    // client will specify the id to delete
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      res.status(404).json({
+        message: "The post with the specified ID does not exist",
+      });
+    } else {
+      // bc we have the specified ID and are deleting it,
+      //  we do not need to store it in a var
+      await Post.remove(req.params.id);
+      // return the deleted post object
+      res.json(post);
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: "The post could not be removed",
+      err: err.message,
+      stack: err.stack,
+    });
+  }
 });
 
 // Updates the post with the specified id using data from the req body and returns the modified posts, not the original
