@@ -45,16 +45,40 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// // Creates a post using the info sent inside the req body and returns the newly created post object
-// router.post("/", (req, res) => {});
+// Creates a post using the info sent inside the req body and returns the newly created post object
+router.post("/", (req, res) => {
+  const { title, contents } = req.body;
+  if (!title || !contents) {
+    res.status(400).json({
+      message: "Please provide title and contents for the post",
+    });
+  } else {
+    Post.insert({ title, contents })
+      .then(({ id }) => {
+        return Post.findById(id);
+      })
+      .then((post) => {
+        res.status(201).json(post);
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: "There was an error while saving the post to the database",
+          err: err.message,
+          stack: err.stack,
+        });
+      });
+  }
+});
 
 // // Removes the post with the specified id and returns the deleted post object
-// router.delete("/:id", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  
+});
 
-// // Updates the post with the specified id using data from the req body and returns the modified posts, not the original
+// Updates the post with the specified id using data from the req body and returns the modified posts, not the original
 // router.put("/:id", (req, res) => {});
 
-// // Returns an array of all the comment objects associated with the post with the specified id
+// Returns an array of all the comment objects associated with the post with the specified id
 // router.get("/:id/comments", (req, res) => {});
 
 module.exports = router;
